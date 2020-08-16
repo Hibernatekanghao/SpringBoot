@@ -26,9 +26,9 @@ public class DownloadContrllor {
         InputStream in = new FileInputStream(file);
         //available:获取输入流所读取的文件的最大字节数
         byte[] body = new byte[in.available()];
-        //把字节读取到数组中
+        //把字节读取到数组中s
         in.read(body);
-        //设置请求头
+        //设置请求头s
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add("Content-Disposition", "attchement;filename=" + file.getName());
         //设置响应状态
