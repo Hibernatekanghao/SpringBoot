@@ -1,0 +1,10 @@
+spring:
+  resources:
+    static-locations: classpath:templates/,classpath:static/
+  mvc:
+    view:
+      prefix: html/
+      suffix: .html
+
+server:
+  port=8774:
