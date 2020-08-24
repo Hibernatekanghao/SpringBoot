@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @Controller
 
@@ -34,7 +36,9 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state) {
+                           @RequestParam(name = "state") String state,
+                           HttpServletRequest request) {
+        // HttpServletRequest  自动加载前端请求的上下文
         //获取返回的参数  调用provider 方法  shift + enter 重启一行
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(Client_id);
@@ -45,13 +49,18 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser user = githubProvider.getUser(accessToken);
-        String username = user.getName();
-        String senior = user.getBio();
-
-        System.out.println("==>httpMethodOne 方式三请求返回结果: " + username);
-        System.out.println("==>httpMethodOne 方式四请求返回结果: " + user.getId());
-        System.out.println("==>httpMethodOne 方式五请求返回结果: " + senior);
-
-        return "index";
+        if(user != null){
+            //登录成功 写cookie  和session
+            request.getSession().setAttribute("user",user);
+            System.out.println("==>httpMethodOne 方式三请求返回结果 user: " +user );
+            //自动跳转到 redirect返回的是路径
+            return "redirect:/";
+        }else{
+            //登录失败,重新登录
+            return "redirect:/";
+        }
+         // System.out.println("==>httpMethodOne 方式三请求返回结果: " + username);
+        //System.out.println("==>httpMethodOne 方式四请求返回结果: " + user.getId());
+        //System.out.println("==>httpMethodOne 方式五请求返回结果: " + senior);
     }
 }
