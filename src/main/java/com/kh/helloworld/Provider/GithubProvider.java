@@ -24,7 +24,6 @@ public class GithubProvider {
                 .url("https://github.com/login/oauth/access_token")
                 .post(body)
                 .build();
-        System.out.println("==>request: " + request);
 
         try (Response response = client.newCall(request).execute()) {
             // 尝试将返回值转换成字符串并返回
@@ -44,12 +43,17 @@ public class GithubProvider {
                 //步骤3：应用程序轮询GitHub，以检查用户是否授权了该设备
                 .url("https://api.github.com/user?access_token=" + accessToken)
                 .build();
+        System.out.println("==>httpMethodOne 方式二。1应用程序轮询GitHub，以检查用户是否授权了该设备 request: " + request);
         try {
             Response response = client.newCall(request).execute();
+            System.out.println("==>httpMethodOne 方式二。2请求返回结果 response: " + response);
             // 尝试将返回值转换成字符串并返回
             String string = response.body().string();
+            System.out.println("==>httpMethodOne 方式二。3请求返回结果 string: " + string);
             // string 自动转换成java 类对象
             GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
+            System.out.println("==>httpMethodOne 方式三请求返回结果githubUser: " + githubUser);
+
             return githubUser;
         } catch (Exception e) {
             e.printStackTrace();
